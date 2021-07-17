@@ -13,5 +13,6 @@
 ### How to build the application
  - TODO - Instructions on how to build the application
 
-
+### API documentation
+ - To access the API documentation start the application and go to http://localhost:8080/swagger-ui.html
 

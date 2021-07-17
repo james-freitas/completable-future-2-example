@@ -1,0 +1,61 @@
+openapi: 3.0.2
+
+info:
+  title: Gmail Backup API
+  description: API used to retrieve backups from Gmail
+  version: 1.0.0
+paths:
+  /backups:
+    post:
+      tags:
+        - Backup
+      summary: Creates a Gmail backup
+      description: Creates a Gmail backup
+      operationId: createBackup
+      responses:
+        200:
+          description: Gmail backup created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BackupResponse"
+              example:
+                backupId: 3160c9de-b152-4886-ae52-41f670c493e9
+        405:
+          description: Method not allowed error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MethodNotAllowedErrorResponse"
+components:
+  schemas:
+    BackupResponse:
+      type: object
+      properties:
+        backupId:
+          type: string
+          description: Backup id
+          example: "3160c9de-b152-4886-ae52-41f670c493e9"
+    MethodNotAllowedErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: timestamp of the response
+          example: "2020-05-30T21:09:11.897+0000"
+        status:
+          type: integer
+          description: http status code
+          example: 405
+        error:
+          type: string
+          description: Description of the error
+          example: "Method Not Allowed"
+        message:
+          type: string
+          description: Message of the response
+          example: ""
+        path:
+          type: string
+          description: Path called
+          example: "/endpoint"
