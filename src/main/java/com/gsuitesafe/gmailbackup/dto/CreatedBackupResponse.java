@@ -3,11 +3,11 @@ package com.gsuitesafe.gmailbackup.dto;
 import java.util.Objects;
 import java.util.UUID;
 
-public class BackupResponse {
+public class CreatedBackupResponse {
 
-    private UUID backupId;
+    private final UUID backupId;
 
-    public BackupResponse() {
+    public CreatedBackupResponse() {
         this.backupId = UUID.randomUUID();
     }
 
@@ -15,15 +15,11 @@ public class BackupResponse {
         return backupId;
     }
 
-    public void setBackupId(UUID backupId) {
-        this.backupId = backupId;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BackupResponse that = (BackupResponse) o;
+        CreatedBackupResponse that = (CreatedBackupResponse) o;
         return backupId.equals(that.backupId);
     }
 

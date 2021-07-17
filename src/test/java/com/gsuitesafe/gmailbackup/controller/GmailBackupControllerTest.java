@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -30,5 +31,17 @@ public class GmailBackupControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.backupId").isNotEmpty());
+    }
+
+    @Test
+    @DisplayName("Should list all initiated backups")
+    void shouldListAllInitiatedBackups() throws Exception {
+
+        mockMvc.perform(get("/backups"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].backupId").isNotEmpty())
+                .andExpect(jsonPath("$[0].date").isNotEmpty())
+                .andExpect(jsonPath("$[0].status").isNotEmpty());
     }
 }

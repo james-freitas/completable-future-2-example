@@ -18,7 +18,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BackupResponse"
+                $ref: "#/components/schemas/CreatedBackupResponse"
               example:
                 backupId: 3160c9de-b152-4886-ae52-41f670c493e9
         405:
@@ -27,15 +27,55 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/MethodNotAllowedErrorResponse"
+    get:
+      tags:
+        - Backup
+      summary: Retrieves list of initiated Gmail backups
+      description: Retrieves a list of the initiated Gmail backups
+      operationId: listInitiatedBackups
+      responses:
+        200:
+          description: Initiated Gmail backup list retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListOfInitiatedBackups"
+        405:
+          description: Method not allowed error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MethodNotAllowedErrorResponse"
 components:
   schemas:
-    BackupResponse:
+    CreatedBackupResponse:
       type: object
       properties:
         backupId:
           type: string
           description: Backup id
           example: "3160c9de-b152-4886-ae52-41f670c493e9"
+    ListOfInitiatedBackups:
+      type: array
+      items:
+        type: object
+        properties:
+          backupId:
+            type: string
+            description: Backup id
+          date:
+            type: string
+            description: Creation backup date
+          status:
+            type: string
+            description: Backup status
+      example:
+        - backupId: "3160c9de-b152-4886-ae52-41f670c493e9"
+          date: "2021-07-17"
+          status: "OK"
+        - backupId: "ff3f1fb9-0645-4b42-97ed-0429c2d707d2"
+          date: "2021-07-17"
+          status: "In progress"
     MethodNotAllowedErrorResponse:
       type: object
       properties:
