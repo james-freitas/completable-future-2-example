@@ -1,0 +1,75 @@
+plugins {
+	id 'org.springframework.boot' version '2.5.2'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id 'jacoco'
+}
+
+group = 'com.gsuitesafe'
+version = '0.1.0'
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// Swagger
+	implementation 'io.springfox:springfox-swagger2:2.9.2'
+	implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+}
+
+test {
+	useJUnitPlatform()
+}
+
+jacocoTestCoverageVerification {
+	dependsOn test
+
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: [
+					"com/gsuitesafe/gmailbackup/dto/**",
+					"com/gsuitesafe/gmailbackup/configuration/**",
+					"com/gsuitesafe/gmailbackup/GmailbackupApplication.class"
+			])
+		}))
+	}
+
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.7
+			}
+		}
+
+		rule {
+			enabled = false
+			element = 'CLASS'
+			includes = ['com.gsuitesafe.gmailbackup.controller.*']
+
+			limit {
+				counter = 'LINE'
+				value = 'TOTALCOUNT'
+				maximum = 0.3
+			}
+		}
+	}
+}
+
+jacocoTestReport {
+	dependsOn test // tests are required to run before generating the report
+
+	afterEvaluate {
+		classDirectories.setFrom(files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: [
+					"com/gsuitesafe/gmailbackup/dto/**",
+					"com/gsuitesafe/gmailbackup/configuration/**",
+					"com/gsuitesafe/gmailbackup/GmailbackupApplication.class"
+			])
+		}))
+	}
+}

@@ -7,10 +7,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -43,5 +48,16 @@ public class GmailBackupControllerTest {
                 .andExpect(jsonPath("$[0].backupId").isNotEmpty())
                 .andExpect(jsonPath("$[0].date").isNotEmpty())
                 .andExpect(jsonPath("$[0].status").isNotEmpty());
+    }
+
+    @Test
+    @DisplayName("Should recover a content of a specific backup in a zip file")
+    void shouldRecoverZipFileBackupById() throws Exception {
+
+        final MvcResult mvcResult = mockMvc.perform(get("/exports/backupId").accept("application/zip"))
+                .andExpect(status().isOk())
+                .andDo(print()).andReturn();
+        String headerValue = mvcResult.getResponse().getHeader("Content-Disposition");
+        assertThat(headerValue).isEqualTo("attachment; filename=\"test.zip\"");
     }
 }
