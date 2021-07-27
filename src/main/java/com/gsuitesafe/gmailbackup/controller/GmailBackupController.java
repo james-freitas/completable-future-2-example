@@ -57,6 +57,10 @@ public class GmailBackupController {
         response.setStatus(HttpServletResponse.SC_OK);
         response.addHeader("Content-Disposition", "attachment; filename=\"test.zip\"");
 
+        generateZipFile(response);
+    }
+
+    private void generateZipFile(HttpServletResponse response) throws IOException {
         // create a list to add files to be zipped
         ArrayList<File> files = new ArrayList<>(2);
         files.add(new File("README.md"));
