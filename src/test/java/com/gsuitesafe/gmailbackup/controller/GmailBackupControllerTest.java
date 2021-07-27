@@ -51,10 +51,21 @@ public class GmailBackupControllerTest {
     }
 
     @Test
-    @DisplayName("Should recover a content of a specific backup in a zip file")
+    @DisplayName("Should recover a content of a specific backup of messages in a zip file")
     void shouldRecoverZipFileBackupById() throws Exception {
 
         final MvcResult mvcResult = mockMvc.perform(get("/exports/backupId").accept("application/zip"))
+                .andExpect(status().isOk())
+                .andDo(print()).andReturn();
+        String headerValue = mvcResult.getResponse().getHeader("Content-Disposition");
+        assertThat(headerValue).isEqualTo("attachment; filename=\"test.zip\"");
+    }
+
+    @Test
+    @DisplayName("Should recover a content of a specific backup of messages grouped by label in a zip file ")
+    void shouldRecoverZipFileBackupByIdAndLabel() throws Exception {
+
+        final MvcResult mvcResult = mockMvc.perform(get("/exports/backupId/label").accept("application/zip"))
                 .andExpect(status().isOk())
                 .andDo(print()).andReturn();
         String headerValue = mvcResult.getResponse().getHeader("Content-Disposition");

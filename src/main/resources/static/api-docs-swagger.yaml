@@ -75,6 +75,41 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/MethodNotAllowedErrorResponse"
+  /exports/{backupId}/{label}:
+    get:
+      tags:
+        - Export
+      summary: Generates a zip file containing Gmail backup by label
+      description: Generates a zip file containing Gmail backup
+      operationId: downloadBackupByLabel
+      parameters:
+        - name: backupId
+          in: path
+          description: Backup id of the backup that will we zipped
+          required: true
+          schema:
+            type: integer
+        - name: label
+          in: path
+          description: Label of the messages in the backup that will we zipped
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Gmail backup retrieved successfully
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+
+        405:
+          description: Method not allowed error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MethodNotAllowedErrorResponse"
 components:
   schemas:
     CreatedBackupResponse:

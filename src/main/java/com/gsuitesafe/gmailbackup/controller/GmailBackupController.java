@@ -60,6 +60,20 @@ public class GmailBackupController {
         generateZipFile(response);
     }
 
+    @GetMapping(value = "/exports/{backupId}/{label}", produces="application/zip")
+    public void downloadBackupByLabel(
+            @PathVariable String backupId,
+            @PathVariable String label,
+            HttpServletResponse response
+    ) throws IOException {
+
+        // Setting headers
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.addHeader("Content-Disposition", "attachment; filename=\"test.zip\"");
+
+        generateZipFile(response);
+    }
+
     private void generateZipFile(HttpServletResponse response) throws IOException {
         // create a list to add files to be zipped
         ArrayList<File> files = new ArrayList<>(2);
