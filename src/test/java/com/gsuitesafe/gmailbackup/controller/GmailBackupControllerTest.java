@@ -1,17 +1,24 @@
 package com.gsuitesafe.gmailbackup.controller;
 
+import com.gsuitesafe.gmailbackup.dto.CreatedBackupResponse;
+import com.gsuitesafe.gmailbackup.service.GmailBackupService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -27,15 +34,24 @@ public class GmailBackupControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @MockBean
+    private GmailBackupService service;
+
     @Test
     @DisplayName("Should start an asynchronous backup and return the backup id")
     void shouldCreateBackupAndGetBackupId() throws Exception {
+
+        final CreatedBackupResponse createdBackupResponse = new CreatedBackupResponse(UUID.randomUUID());
+
+        given(service.createGmailBackup()).willReturn(createdBackupResponse);
 
         mockMvc.perform(post("/backups")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.backupId").isNotEmpty());
+
+        verify(service, times(1)).createGmailBackup();
     }
 
     @Test

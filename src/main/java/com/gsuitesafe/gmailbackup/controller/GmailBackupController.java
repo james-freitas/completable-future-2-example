@@ -2,8 +2,8 @@ package com.gsuitesafe.gmailbackup.controller;
 
 import com.gsuitesafe.gmailbackup.dto.CreatedBackupResponse;
 import com.gsuitesafe.gmailbackup.dto.InitiatedBackupResponse;
+import com.gsuitesafe.gmailbackup.service.GmailBackupService;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -26,10 +25,15 @@ import java.util.zip.ZipOutputStream;
 @RestController
 public class GmailBackupController {
 
+    private final GmailBackupService gmailBackupService;
+
+    public GmailBackupController(GmailBackupService gmailBackupService) {
+        this.gmailBackupService = gmailBackupService;
+    }
+
     @PostMapping("/backups")
     public ResponseEntity<CreatedBackupResponse> createBackup() {
-        final CreatedBackupResponse createdBackupResponse = new CreatedBackupResponse();
-        return new ResponseEntity<>(createdBackupResponse, HttpStatus.OK);
+        return new ResponseEntity<>(gmailBackupService.createGmailBackup(), HttpStatus.OK);
     }
 
     @GetMapping("/backups")

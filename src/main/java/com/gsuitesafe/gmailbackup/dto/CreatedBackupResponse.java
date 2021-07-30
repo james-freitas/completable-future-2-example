@@ -7,8 +7,8 @@ public class CreatedBackupResponse {
 
     private final UUID backupId;
 
-    public CreatedBackupResponse() {
-        this.backupId = UUID.randomUUID();
+    public CreatedBackupResponse(UUID backupId) {
+        this.backupId = backupId;
     }
 
     public UUID getBackupId() {
