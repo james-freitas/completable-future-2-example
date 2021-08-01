@@ -4,11 +4,17 @@ import com.google.api.services.gmail.model.Message;
 import com.gsuitesafe.gmailbackup.domain.GmailBackup;
 import com.gsuitesafe.gmailbackup.dto.CreatedBackupResponse;
 import com.gsuitesafe.gmailbackup.dto.InitiatedBackupResponse;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +23,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Service
 public class GmailBackupService {
@@ -61,5 +69,27 @@ public class GmailBackupService {
         Message message = new Message();
         message.setId(UUID.randomUUID().toString());
         return Arrays.asList(new Message());
+    }
+
+    public void generateBackupZipFile(HttpServletResponse response) throws IOException {
+        // create a list to add files to be zipped
+        ArrayList<File> files = new ArrayList<>(2);
+        files.add(new File("README.md"));
+
+        ZipOutputStream zipOutputStream = new ZipOutputStream(response.getOutputStream());
+
+        // package files
+        for (File file : files) {
+            //new zip entry and copying inputstream with file to zipOutputStream, after all closing streams
+            zipOutputStream.putNextEntry(new ZipEntry(file.getName()));
+            FileInputStream fileInputStream = new FileInputStream(file);
+
+            IOUtils.copy(fileInputStream, zipOutputStream);
+
+            fileInputStream.close();
+            zipOutputStream.closeEntry();
+        }
+
+        zipOutputStream.close();
     }
 }
