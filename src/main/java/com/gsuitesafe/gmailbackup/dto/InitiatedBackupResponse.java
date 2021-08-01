@@ -1,5 +1,7 @@
 package com.gsuitesafe.gmailbackup.dto;
 
+import com.gsuitesafe.gmailbackup.domain.BackupStatus;
+
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
@@ -8,11 +10,11 @@ public class InitiatedBackupResponse {
 
     private UUID backupId;
     private LocalDate date;
-    private String status;
+    private BackupStatus status;
 
     public InitiatedBackupResponse() {}
 
-    public InitiatedBackupResponse(UUID backupId, LocalDate date, String status) {
+    public InitiatedBackupResponse(UUID backupId, LocalDate date, BackupStatus status) {
         this.backupId = backupId;
         this.date = date;
         this.status = status;
@@ -26,11 +28,11 @@ public class InitiatedBackupResponse {
         return date;
     }
 
-    public String getStatus() {
+    public BackupStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(BackupStatus status) {
         this.status = status;
     }
 

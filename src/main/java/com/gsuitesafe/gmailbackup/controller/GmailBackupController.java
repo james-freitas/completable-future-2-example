@@ -15,39 +15,29 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 @RestController
 public class GmailBackupController {
 
-    private final GmailBackupService gmailBackupService;
+    private final GmailBackupService service;
 
-    public GmailBackupController(GmailBackupService gmailBackupService) {
-        this.gmailBackupService = gmailBackupService;
+    public GmailBackupController(GmailBackupService service) {
+        this.service = service;
     }
 
     @PostMapping("/backups")
     public ResponseEntity<CreatedBackupResponse> createBackup() {
-        return new ResponseEntity<>(gmailBackupService.createGmailBackup(), HttpStatus.OK);
+        final CreatedBackupResponse backupResponse = service.createGmailBackup();
+        return new ResponseEntity<>(backupResponse, HttpStatus.OK);
     }
 
     @GetMapping("/backups")
     public ResponseEntity<List<InitiatedBackupResponse>> listInitiatedBackups() {
-
-        final InitiatedBackupResponse ibr = new InitiatedBackupResponse(
-                UUID.randomUUID(),
-                LocalDate.now(),
-                "In progress"
-        );
-
-        List<InitiatedBackupResponse> list = new ArrayList<>();
-        list.add(ibr);
-
+        List<InitiatedBackupResponse> list = service.getInitiatedGmailBackupList();
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 

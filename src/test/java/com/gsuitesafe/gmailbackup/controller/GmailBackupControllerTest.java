@@ -1,6 +1,8 @@
 package com.gsuitesafe.gmailbackup.controller;
 
+import com.gsuitesafe.gmailbackup.domain.BackupStatus;
 import com.gsuitesafe.gmailbackup.dto.CreatedBackupResponse;
+import com.gsuitesafe.gmailbackup.dto.InitiatedBackupResponse;
 import com.gsuitesafe.gmailbackup.service.GmailBackupService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,6 +15,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -58,12 +64,20 @@ public class GmailBackupControllerTest {
     @DisplayName("Should list all initiated backups")
     void shouldListAllInitiatedBackups() throws Exception {
 
+        final InitiatedBackupResponse response = new InitiatedBackupResponse(
+                UUID.randomUUID(), LocalDate.now(), BackupStatus.IN_PROGRESS);
+        List<InitiatedBackupResponse> list = Arrays.asList(response);
+
+        given(service.getInitiatedGmailBackupList()).willReturn(list);
+
         mockMvc.perform(get("/backups"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].backupId").isNotEmpty())
                 .andExpect(jsonPath("$[0].date").isNotEmpty())
                 .andExpect(jsonPath("$[0].status").isNotEmpty());
+
+        verify(service, times(1)).getInitiatedGmailBackupList();
     }
 
     @Test
