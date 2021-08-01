@@ -1,5 +1,6 @@
 package com.gsuitesafe.gmailbackup.service;
 
+import com.google.api.services.gmail.model.Message;
 import com.gsuitesafe.gmailbackup.domain.GmailBackup;
 import com.gsuitesafe.gmailbackup.dto.CreatedBackupResponse;
 import com.gsuitesafe.gmailbackup.dto.InitiatedBackupResponse;
@@ -8,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -41,7 +43,7 @@ public class GmailBackupService {
     }
 
     @Async("processExecutor")
-    public CompletableFuture<String> createBackupTask() {
+    public CompletableFuture<List<Message>> createBackupTask() {
 
         return CompletableFuture.supplyAsync(() -> {
             try {
@@ -50,8 +52,14 @@ public class GmailBackupService {
             } catch (InterruptedException e) {
                 throw new IllegalStateException(e);
             }
-            return "Gmail messages";
+
+            return generateMockedGmailMessagesList();
         });
     }
 
+    private List<Message> generateMockedGmailMessagesList() {
+        Message message = new Message();
+        message.setId(UUID.randomUUID().toString());
+        return Arrays.asList(new Message());
+    }
 }

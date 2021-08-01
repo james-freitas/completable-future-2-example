@@ -1,27 +1,23 @@
 package com.gsuitesafe.gmailbackup.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.gsuitesafe.gmailbackup.service.GmailBackupService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Async;
+import com.google.api.services.gmail.model.Message;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
 public class GmailBackup {
 
     private UUID backupId;
     private LocalDate date;
     private BackupStatus backupStatus;
-    private CompletableFuture<String> backupTask;
+    private CompletableFuture<List<Message>> backupTask;
 
     private GmailBackup() {}
 
-    public GmailBackup(CompletableFuture<String> backupTask) {
+    public GmailBackup(CompletableFuture<List<Message>> backupTask) {
         this.backupId = UUID.randomUUID();
         this.date = LocalDate.now();
         this.backupStatus = BackupStatus.IN_PROGRESS;
@@ -64,5 +60,9 @@ public class GmailBackup {
     @Override
     public int hashCode() {
         return Objects.hash(backupId);
+    }
+
+    public CompletableFuture<List<Message>> getBackupTask() {
+        return backupTask;
     }
 }
