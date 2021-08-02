@@ -47,11 +47,13 @@ public class GmailBackupController {
             HttpServletResponse response
     ) throws IOException {
 
+        service.getGmailMessages(backupId);
+
         // Setting headers
         response.setStatus(HttpServletResponse.SC_OK);
         response.addHeader("Content-Disposition", "attachment; filename=\"test.zip\"");
 
-        service.generateBackupZipFile(response);
+        generateBackupZipFile(response);
     }
 
     @GetMapping(value = "/exports/{backupId}/{label}", produces="application/zip")
@@ -65,8 +67,29 @@ public class GmailBackupController {
         response.setStatus(HttpServletResponse.SC_OK);
         response.addHeader("Content-Disposition", "attachment; filename=\"test.zip\"");
 
-        service.generateBackupZipFile(response);
+        generateBackupZipFile(response);
     }
 
+    public void generateBackupZipFile(HttpServletResponse response) throws IOException {
+        // create a list to add files to be zipped
+        ArrayList<File> files = new ArrayList<>(2);
+        files.add(new File("README.md"));
+
+        ZipOutputStream zipOutputStream = new ZipOutputStream(response.getOutputStream());
+
+        // package files
+        for (File file : files) {
+            //new zip entry and copying inputstream with file to zipOutputStream, after all closing streams
+            zipOutputStream.putNextEntry(new ZipEntry(file.getName()));
+            FileInputStream fileInputStream = new FileInputStream(file);
+
+            IOUtils.copy(fileInputStream, zipOutputStream);
+
+            fileInputStream.close();
+            zipOutputStream.closeEntry();
+        }
+
+        zipOutputStream.close();
+    }
 
 }

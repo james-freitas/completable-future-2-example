@@ -10,6 +10,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @SpringBootApplication
 @EnableAsync
@@ -26,7 +28,7 @@ public class GmailBackupApplication {
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 		executor.setThreadNamePrefix("GmailBackup-");
 		executor.setCorePoolSize(5);
-		executor.setMaxPoolSize(5);
+		executor.setMaxPoolSize(10);
 		executor.setQueueCapacity(500);
 		executor.afterPropertiesSet();
 		executor.initialize();

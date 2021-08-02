@@ -1,14 +1,17 @@
 package com.gsuitesafe.gmailbackup.controller;
 
+import com.gsuitesafe.gmailbackup.GmailBackupApplication;
 import com.gsuitesafe.gmailbackup.domain.BackupStatus;
 import com.gsuitesafe.gmailbackup.dto.CreatedBackupResponse;
 import com.gsuitesafe.gmailbackup.dto.InitiatedBackupResponse;
+import com.gsuitesafe.gmailbackup.exception.BackupNotFoundException;
 import com.gsuitesafe.gmailbackup.service.GmailBackupService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 @WebMvcTest(GmailBackupController.class)
 @AutoConfigureMockMvc
@@ -87,8 +91,22 @@ public class GmailBackupControllerTest {
         final MvcResult mvcResult = mockMvc.perform(get("/exports/backupId").accept("application/zip"))
                 .andExpect(status().isOk())
                 .andDo(print()).andReturn();
+
         String headerValue = mvcResult.getResponse().getHeader("Content-Disposition");
         assertThat(headerValue).isEqualTo("attachment; filename=\"test.zip\"");
+    }
+
+    @Test
+    @DisplayName("Should fail to return a content of a specific backup when backup id is not found")
+    void shouldFailToRecoverZipFileBackupByNonExistentId() throws Exception {
+
+        given(service.getGmailMessages("backupId")).willThrow(BackupNotFoundException.class);
+
+        mockMvc.perform(get("/exports/backupId"))
+                .andExpect(status().isNotFound())
+                .andDo(print()).andReturn();
+
+        verify(service, times(1)).getGmailMessages("backupId");
     }
 
     @Test
