@@ -1,5 +1,7 @@
 package com.gsuitesafe.gmailbackup.controller;
 
+import com.google.api.client.json.GenericJson;
+import com.google.api.services.gmail.model.Message;
 import com.gsuitesafe.gmailbackup.dto.CreatedBackupResponse;
 import com.gsuitesafe.gmailbackup.dto.InitiatedBackupResponse;
 import com.gsuitesafe.gmailbackup.service.GmailBackupService;
@@ -15,8 +17,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -47,13 +55,21 @@ public class GmailBackupController {
             HttpServletResponse response
     ) throws IOException {
 
-        service.getGmailMessages(backupId);
-
         // Setting headers
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.addHeader("Content-Disposition", "attachment; filename=\"test.zip\"");
+        prepareHeaders(backupId, response);
 
-        generateBackupZipFile(response);
+        final List<String> messages = service.getGmailMessages(backupId);
+
+        Path path = Paths.get(backupId + ".txt");
+        Files.write(path, messages, StandardCharsets.UTF_8);
+
+        generateBackupZipFile(response, backupId + ".txt");
+    }
+
+    private void prepareHeaders(@PathVariable String backupId, HttpServletResponse response) {
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.addHeader("Content-Disposition", "attachment; filename=\"" +
+                backupId + ".zip\"");
     }
 
     @GetMapping(value = "/exports/{backupId}/{label}", produces="application/zip")
@@ -67,19 +83,17 @@ public class GmailBackupController {
         response.setStatus(HttpServletResponse.SC_OK);
         response.addHeader("Content-Disposition", "attachment; filename=\"test.zip\"");
 
-        generateBackupZipFile(response);
+        //generateBackupZipFile(response);
     }
 
-    public void generateBackupZipFile(HttpServletResponse response) throws IOException {
-        // create a list to add files to be zipped
-        ArrayList<File> files = new ArrayList<>(2);
-        files.add(new File("README.md"));
+    public void generateBackupZipFile(HttpServletResponse response, String path) throws IOException {
+
+        ArrayList<File> files = new ArrayList<>();
+        files.add(new File(path));
 
         ZipOutputStream zipOutputStream = new ZipOutputStream(response.getOutputStream());
 
-        // package files
         for (File file : files) {
-            //new zip entry and copying inputstream with file to zipOutputStream, after all closing streams
             zipOutputStream.putNextEntry(new ZipEntry(file.getName()));
             FileInputStream fileInputStream = new FileInputStream(file);
 

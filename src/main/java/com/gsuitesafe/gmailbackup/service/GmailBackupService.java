@@ -1,6 +1,8 @@
 package com.gsuitesafe.gmailbackup.service;
 
+import com.google.api.client.json.GenericJson;
 import com.google.api.services.gmail.model.Message;
+import com.gsuitesafe.gmailbackup.domain.BackupStatus;
 import com.gsuitesafe.gmailbackup.domain.GmailBackup;
 import com.gsuitesafe.gmailbackup.dto.CreatedBackupResponse;
 import com.gsuitesafe.gmailbackup.dto.InitiatedBackupResponse;
@@ -38,7 +40,8 @@ public class GmailBackupService {
 
     public CreatedBackupResponse createGmailBackup() {
         final GmailBackup gmailBackup = new GmailBackup(createBackupTask());
-        backupMap.put(gmailBackup.getBackupId().toString(), gmailBackup);
+        final String backupId = gmailBackup.getBackupId().toString();
+        backupMap.put(backupId, gmailBackup);
         return new CreatedBackupResponse(gmailBackup.getBackupId());
     }
 
@@ -78,13 +81,27 @@ public class GmailBackupService {
         return Arrays.asList(message1, message2);
     }
 
-
-    public List<Message> getGmailMessages(String backupId) {
+    public List<String> getGmailMessages(String backupId) {
         GmailBackup gmailBackup = backupMap.get(backupId);
         if (gmailBackup == null) {
             throw new BackupNotFoundException("Backup was not found");
         }
 
-        return null;
+        setOkStatusFor(backupId, gmailBackup);
+
+        return gmailBackup.getBackupTask().join()
+                .stream()
+                .map(GenericJson::toString)
+                .collect(Collectors.toList());
+    }
+
+    private void setOkStatusFor(String backupId, GmailBackup gmailBackup) {
+        final CompletableFuture<List<Message>> backupTask = gmailBackup.getBackupTask();
+        backupTask.thenRun(() -> {
+            if (gmailBackup.getBackupStatus() != BackupStatus.OK) {
+                gmailBackup.setBackupStatus(BackupStatus.OK);
+                backupMap.put(backupId, gmailBackup);
+            }
+        });
     }
 }

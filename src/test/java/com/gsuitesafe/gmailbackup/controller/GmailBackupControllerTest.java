@@ -93,7 +93,7 @@ public class GmailBackupControllerTest {
                 .andDo(print()).andReturn();
 
         String headerValue = mvcResult.getResponse().getHeader("Content-Disposition");
-        assertThat(headerValue).isEqualTo("attachment; filename=\"test.zip\"");
+        assertThat(headerValue).isEqualTo("attachment; filename=\"backupId.zip\"");
     }
 
     @Test
