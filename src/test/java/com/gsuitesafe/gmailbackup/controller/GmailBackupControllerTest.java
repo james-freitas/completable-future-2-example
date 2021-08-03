@@ -95,13 +95,13 @@ public class GmailBackupControllerTest {
     @DisplayName("Should fail to return a content of a specific backup when backup id is not found")
     void shouldFailToRecoverZipFileBackupByNonExistentId() throws Exception {
 
-        given(service.getGmailMessages("backupId")).willThrow(BackupNotFoundException.class);
+        given(service.getGmailMessagesBy("backupId")).willThrow(BackupNotFoundException.class);
 
         mockMvc.perform(get("/exports/backupId"))
                 .andExpect(status().isNotFound())
                 .andDo(print()).andReturn();
 
-        verify(service, times(1)).getGmailMessages("backupId");
+        verify(service, times(1)).getGmailMessagesBy("backupId");
     }
 
     @Test
@@ -112,6 +112,6 @@ public class GmailBackupControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print()).andReturn();
         String headerValue = mvcResult.getResponse().getHeader("Content-Disposition");
-        assertThat(headerValue).isEqualTo("attachment; filename=\"test.zip\"");
+        assertThat(headerValue).isEqualTo("attachment; filename=\"backupId-label.zip\"");
     }
 }

@@ -51,10 +51,9 @@ public class GmailBackupController {
             HttpServletResponse response
     ) throws IOException {
 
-        // Setting headers
-        prepareHeaders(backupId, response);
+        prepareHeadersFor(backupId, response);
 
-        final List<String> messages = service.getGmailMessages(backupId);
+        final List<String> messages = service.getGmailMessagesBy(backupId);
 
         Path path = Paths.get(backupId + ".txt");
         Files.write(path, messages, StandardCharsets.UTF_8);
@@ -62,7 +61,7 @@ public class GmailBackupController {
         generateBackupZipFile(response, backupId + ".txt");
     }
 
-    private void prepareHeaders(@PathVariable String backupId, HttpServletResponse response) {
+    private void prepareHeadersFor(@PathVariable String backupId, HttpServletResponse response) {
         response.setStatus(HttpServletResponse.SC_OK);
         response.addHeader("Content-Disposition", "attachment; filename=\"" +
                 backupId + ".zip\"");
@@ -75,11 +74,20 @@ public class GmailBackupController {
             HttpServletResponse response
     ) throws IOException {
 
-        // Setting headers
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.addHeader("Content-Disposition", "attachment; filename=\"test.zip\"");
+        prepareHeadersFor(backupId, label, response);
 
-        //generateBackupZipFile(response);
+        final List<String> messages = service.getGmailMessagesBy(backupId, label);
+
+        Path path = Paths.get(backupId + "-" + label + ".txt");
+        Files.write(path, messages, StandardCharsets.UTF_8);
+
+        generateBackupZipFile(response, backupId + "-" + label + ".txt");
+    }
+
+    private void prepareHeadersFor(@PathVariable String backupId, @PathVariable String label, HttpServletResponse response) {
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.addHeader("Content-Disposition", "attachment; " +
+                "filename=\"" + backupId + "-" + label + ".zip\"");
     }
 
     public void generateBackupZipFile(HttpServletResponse response, String path) throws IOException {
@@ -101,5 +109,4 @@ public class GmailBackupController {
 
         zipOutputStream.close();
     }
-
 }

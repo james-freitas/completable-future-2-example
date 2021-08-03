@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -63,14 +64,16 @@ public class GmailBackupService {
     private List<Message> generateMockedGmailMessagesList() {
         Message message1 = new Message();
         message1.setId(UUID.randomUUID().toString());
+        message1.setLabelIds(Collections.singletonList("labelA"));
 
         Message message2 = new Message();
         message2.setId(UUID.randomUUID().toString());
+        message2.setLabelIds(Collections.singletonList("labelB"));
 
         return Arrays.asList(message1, message2);
     }
 
-    public List<String> getGmailMessages(String backupId) {
+    public List<String> getGmailMessagesBy(String backupId) {
         GmailBackup gmailBackup = backupMap.get(backupId);
         if (gmailBackup == null) {
             throw new BackupNotFoundException("Backup was not found");
@@ -92,5 +95,20 @@ public class GmailBackupService {
                 backupMap.put(backupId, gmailBackup);
             }
         });
+    }
+
+    public List<String> getGmailMessagesBy(String backupId, String label) {
+        GmailBackup gmailBackup = backupMap.get(backupId);
+        if (gmailBackup == null) {
+            throw new BackupNotFoundException("Backup was not found");
+        }
+
+        setOkStatusFor(backupId, gmailBackup);
+
+        return gmailBackup.getBackupTask().join()
+                .stream()
+                .filter(m -> m.getLabelIds().contains(label))
+                .map(GenericJson::toString)
+                .collect(Collectors.toList());
     }
 }
