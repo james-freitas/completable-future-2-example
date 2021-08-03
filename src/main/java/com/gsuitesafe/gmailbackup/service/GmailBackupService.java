@@ -94,6 +94,10 @@ public class GmailBackupService {
                 gmailBackup.setBackupStatus(BackupStatus.OK);
                 backupMap.put(backupId, gmailBackup);
             }
+        }).exceptionally(ex -> {
+            logger.error("Backup " + backupId + " has failed.");
+            gmailBackup.setBackupStatus(BackupStatus.FAILED);
+            return null;
         });
     }
 
