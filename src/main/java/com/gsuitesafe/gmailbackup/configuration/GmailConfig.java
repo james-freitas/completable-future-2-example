@@ -25,7 +25,7 @@ import java.util.List;
 
 public class GmailConfig {
 
-    private static final String APPLICATION_NAME = "Quickstart";
+    private static final String APPLICATION_NAME = "GmailBackup";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
 
@@ -38,6 +38,7 @@ public class GmailConfig {
 
     /**
      * Creates an authorized Credential object.
+     *
      * @param HTTP_TRANSPORT The network HTTP Transport.
      * @return An authorized Credential object.
      * @throws IOException If the credentials.json file cannot be found.

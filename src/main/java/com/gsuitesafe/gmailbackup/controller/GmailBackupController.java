@@ -1,7 +1,5 @@
 package com.gsuitesafe.gmailbackup.controller;
 
-import com.google.api.client.json.GenericJson;
-import com.google.api.services.gmail.model.Message;
 import com.gsuitesafe.gmailbackup.dto.CreatedBackupResponse;
 import com.gsuitesafe.gmailbackup.dto.InitiatedBackupResponse;
 import com.gsuitesafe.gmailbackup.service.GmailBackupService;
@@ -22,9 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -49,7 +45,7 @@ public class GmailBackupController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/exports/{backupId}", produces="application/zip")
+    @GetMapping(value = "/exports/{backupId}", produces = "application/zip")
     public void downloadFullBackup(
             @PathVariable String backupId,
             HttpServletResponse response
@@ -72,7 +68,7 @@ public class GmailBackupController {
                 backupId + ".zip\"");
     }
 
-    @GetMapping(value = "/exports/{backupId}/{label}", produces="application/zip")
+    @GetMapping(value = "/exports/{backupId}/{label}", produces = "application/zip")
     public void downloadBackupByLabel(
             @PathVariable String backupId,
             @PathVariable String label,

@@ -9,30 +9,26 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 @SpringBootApplication
 @EnableAsync
 public class GmailBackupApplication {
 
-	private static final Logger logger = LoggerFactory.getLogger(GmailBackupApplication.class);
+    private static final Logger logger = LoggerFactory.getLogger(GmailBackupApplication.class);
 
-	public static void main(String[] args) {
-		SpringApplication.run(GmailBackupApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(GmailBackupApplication.class, args);
+    }
 
-	@Bean(name="processExecutor")
-	public TaskExecutor workExecutor() {
-		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-		executor.setThreadNamePrefix("GmailBackup-");
-		executor.setCorePoolSize(5);
-		executor.setMaxPoolSize(10);
-		executor.setQueueCapacity(500);
-		executor.afterPropertiesSet();
-		executor.initialize();
-		logger.info("ThreadPoolTaskExecutor set");
-		return executor;
-	}
+    @Bean(name = "processExecutor")
+    public TaskExecutor workExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setThreadNamePrefix("GmailBackup-");
+        executor.setCorePoolSize(5);
+        executor.setMaxPoolSize(10);
+        executor.setQueueCapacity(500);
+        executor.afterPropertiesSet();
+        executor.initialize();
+        logger.info("ThreadPoolTaskExecutor set");
+        return executor;
+    }
 }
