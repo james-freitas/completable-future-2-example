@@ -1,4 +1,4 @@
-# Gmail Backup
+# Backup
 
 ### What is Backup?
 * It's a command line tool used to back up your messages
