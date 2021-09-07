@@ -1,13 +1,10 @@
 # Gmail Backup
 
-### What is Gmail Backup?
-* It's a command line tool used to back up your Gmail messages
+### What is Backup?
+* It's a command line tool used to back up your messages
 
 ### Prerequisites
  * Java 1.8 Jdk or Jre installed
- * A Google Cloud Platform project with the API enabled. To create a project and enable an API, refer to [Create a project and enable the API](https://developers.google.com/workspace/guides/create-project).
- * Authorization credentials for a desktop application. To learn how to create credentials for a desktop application, refer to [Create credentials](https://developers.google.com/workspace/guides/create-credentials).
- * A Google account with Gmail enabled
 
 ### How to build the application using Windows
  1. Go to the Windows command prompt. One option is to choose Run from the Windows Start menu, type cmd, and click OK.
@@ -20,8 +17,7 @@
  3. Run `./gradlew build`
 
 ### API documentation
- - To access the API documentation start the application and go to http://localhost:8080/swagger-ui.html
- 
+ - To access the API documentation start the application and go to http://localhost:8080/swagger-ui.html 
  
 ### How to run the application
 
