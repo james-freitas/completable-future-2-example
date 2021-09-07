@@ -1,20 +1,20 @@
 openapi: 3.0.2
 
 info:
-  title: Gmail Backup API
-  description: API used to retrieve backups from Gmail
+  title: Backup API
+  description: API used to retrieve mocked backups
   version: 1.0.0
 paths:
   /backups:
     post:
       tags:
         - Backup
-      summary: Creates a Gmail backup
-      description: Creates a Gmail backup
+      summary: Creates a backup
+      description: Creates a backup
       operationId: createBackup
       responses:
         200:
-          description: Gmail backup created successfully
+          description: Backup created successfully
           content:
             application/json:
               schema:
@@ -30,12 +30,12 @@ paths:
     get:
       tags:
         - Backup
-      summary: Retrieves list of initiated Gmail backups
-      description: Retrieves a list of the initiated Gmail backups
+      summary: Retrieves list of initiated backups
+      description: Retrieves a list of the initiated backups
       operationId: listInitiatedBackups
       responses:
         200:
-          description: Initiated Gmail backup list retrieved successfully
+          description: Initiated backup list retrieved successfully
           content:
             application/json:
               schema:
@@ -50,8 +50,8 @@ paths:
     get:
       tags:
         - Export
-      summary: Generates a zip file containing Gmail backup
-      description: Generates a zip file containing Gmail backup
+      summary: Generates a zip file containing backup
+      description: Generates a zip file containing backup
       operationId: downloadFullBackup
       parameters:
         - name: backupId
@@ -62,7 +62,7 @@ paths:
             type: integer
       responses:
         200:
-          description: Gmail backup retrieved successfully
+          description: Backup retrieved successfully
           content:
             application/zip:
               schema:
@@ -79,8 +79,8 @@ paths:
     get:
       tags:
         - Export
-      summary: Generates a zip file containing Gmail backup by label
-      description: Generates a zip file containing Gmail backup
+      summary: Generates a zip file containing backup by label
+      description: Generates a zip file containing backup
       operationId: downloadBackupByLabel
       parameters:
         - name: backupId
@@ -97,7 +97,7 @@ paths:
             type: integer
       responses:
         200:
-          description: Gmail backup retrieved successfully
+          description: Backup retrieved successfully
           content:
             application/zip:
               schema:

@@ -1,8 +1,8 @@
-package com.gsuitesafe.gmailbackup.controller;
+package com.gsuitesafe.backup.controller;
 
-import com.gsuitesafe.gmailbackup.dto.CreatedBackupResponse;
-import com.gsuitesafe.gmailbackup.dto.InitiatedBackupResponse;
-import com.gsuitesafe.gmailbackup.service.GmailBackupService;
+import com.gsuitesafe.backup.dto.CreatedBackupResponse;
+import com.gsuitesafe.backup.dto.InitiatedBackupResponse;
+import com.gsuitesafe.backup.service.BackupService;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,11 +25,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 @RestController
-public class GmailBackupController {
+public class BackupController {
 
-    private final GmailBackupService service;
+    private final BackupService service;
 
-    public GmailBackupController(GmailBackupService service) {
+    public BackupController(BackupService service) {
         this.service = service;
     }
 

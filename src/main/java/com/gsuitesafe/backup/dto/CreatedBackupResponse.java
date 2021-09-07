@@ -1,4 +1,4 @@
-package com.gsuitesafe.gmailbackup.dto;
+package com.gsuitesafe.backup.dto;
 
 import java.util.UUID;
 

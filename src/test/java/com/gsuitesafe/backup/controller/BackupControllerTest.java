@@ -1,10 +1,10 @@
-package com.gsuitesafe.gmailbackup.controller;
+package com.gsuitesafe.backup.controller;
 
-import com.gsuitesafe.gmailbackup.domain.BackupStatus;
-import com.gsuitesafe.gmailbackup.dto.CreatedBackupResponse;
-import com.gsuitesafe.gmailbackup.dto.InitiatedBackupResponse;
-import com.gsuitesafe.gmailbackup.exception.BackupNotFoundException;
-import com.gsuitesafe.gmailbackup.service.GmailBackupService;
+import com.gsuitesafe.backup.domain.BackupStatus;
+import com.gsuitesafe.backup.dto.CreatedBackupResponse;
+import com.gsuitesafe.backup.dto.InitiatedBackupResponse;
+import com.gsuitesafe.backup.exception.BackupNotFoundException;
+import com.gsuitesafe.backup.service.BackupService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +31,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@WebMvcTest(GmailBackupController.class)
+@WebMvcTest(BackupController.class)
 @AutoConfigureMockMvc
 @DisplayName("Gmail backup controller tests")
-public class GmailBackupControllerTest {
+public class BackupControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private GmailBackupService service;
+    private BackupService service;
 
     @Test
     @DisplayName("Should start an asynchronous backup and return the backup id")

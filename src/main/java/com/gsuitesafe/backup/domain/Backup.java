@@ -1,4 +1,4 @@
-package com.gsuitesafe.gmailbackup.domain;
+package com.gsuitesafe.backup.domain;
 
 import com.google.api.services.gmail.model.Message;
 
@@ -8,16 +8,17 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-public class GmailBackup {
+public class Backup {
 
     private UUID backupId;
     private LocalDate date;
     private BackupStatus backupStatus;
     private CompletableFuture<List<Message>> backupTask;
 
-    private GmailBackup() {}
+    private Backup() {
+    }
 
-    public GmailBackup(CompletableFuture<List<Message>> backupTask) {
+    public Backup(CompletableFuture<List<Message>> backupTask) {
         this.backupId = UUID.randomUUID();
         this.date = LocalDate.now();
         this.backupStatus = BackupStatus.IN_PROGRESS;
@@ -53,7 +54,7 @@ public class GmailBackup {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        GmailBackup that = (GmailBackup) o;
+        Backup that = (Backup) o;
         return backupId.equals(that.backupId);
     }
 

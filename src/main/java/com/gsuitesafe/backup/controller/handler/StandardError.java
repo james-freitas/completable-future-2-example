@@ -1,4 +1,4 @@
-package com.gsuitesafe.gmailbackup.controller.handler;
+package com.gsuitesafe.backup.controller.handler;
 
 public class StandardError {
 
@@ -16,7 +16,8 @@ public class StandardError {
         this.path = path;
     }
 
-    public StandardError() {}
+    public StandardError() {
+    }
 
     public Long getTimeStamp() {
         return timeStamp;

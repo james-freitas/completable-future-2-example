@@ -1,4 +1,4 @@
-package com.gsuitesafe.gmailbackup.domain;
+package com.gsuitesafe.backup.domain;
 
 public enum BackupStatus {
 

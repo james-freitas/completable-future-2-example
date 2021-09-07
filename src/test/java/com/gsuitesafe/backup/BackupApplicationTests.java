@@ -1,13 +1,13 @@
-package com.gsuitesafe.gmailbackup;
+package com.gsuitesafe.backup;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class GmailBackupApplicationTests {
+class BackupApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }

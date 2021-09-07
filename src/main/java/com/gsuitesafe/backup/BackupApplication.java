@@ -1,4 +1,4 @@
-package com.gsuitesafe.gmailbackup;
+package com.gsuitesafe.backup;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,12 +11,12 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @SpringBootApplication
 @EnableAsync
-public class GmailBackupApplication {
+public class BackupApplication {
 
-    private static final Logger logger = LoggerFactory.getLogger(GmailBackupApplication.class);
+    private static final Logger logger = LoggerFactory.getLogger(BackupApplication.class);
 
     public static void main(String[] args) {
-        SpringApplication.run(GmailBackupApplication.class, args);
+        SpringApplication.run(BackupApplication.class, args);
     }
 
     @Bean(name = "processExecutor")

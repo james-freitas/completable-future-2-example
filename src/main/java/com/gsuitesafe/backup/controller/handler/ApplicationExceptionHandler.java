@@ -1,6 +1,6 @@
-package com.gsuitesafe.gmailbackup.controller.handler;
+package com.gsuitesafe.backup.controller.handler;
 
-import com.gsuitesafe.gmailbackup.exception.BackupNotFoundException;
+import com.gsuitesafe.backup.exception.BackupNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

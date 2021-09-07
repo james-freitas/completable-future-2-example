@@ -1,12 +1,12 @@
-package com.gsuitesafe.gmailbackup.service;
+package com.gsuitesafe.backup.service;
 
 import com.google.api.client.json.GenericJson;
 import com.google.api.services.gmail.model.Message;
-import com.gsuitesafe.gmailbackup.domain.BackupStatus;
-import com.gsuitesafe.gmailbackup.domain.GmailBackup;
-import com.gsuitesafe.gmailbackup.dto.CreatedBackupResponse;
-import com.gsuitesafe.gmailbackup.dto.InitiatedBackupResponse;
-import com.gsuitesafe.gmailbackup.exception.BackupNotFoundException;
+import com.gsuitesafe.backup.domain.Backup;
+import com.gsuitesafe.backup.domain.BackupStatus;
+import com.gsuitesafe.backup.dto.CreatedBackupResponse;
+import com.gsuitesafe.backup.dto.InitiatedBackupResponse;
+import com.gsuitesafe.backup.exception.BackupNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
@@ -23,17 +23,17 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
-public class GmailBackupService {
+public class BackupService {
 
-    private static final Logger logger = LoggerFactory.getLogger(GmailBackupService.class);
+    private static final Logger logger = LoggerFactory.getLogger(BackupService.class);
 
-    private final Map<String, GmailBackup> backupMap = new ConcurrentHashMap<>();
+    private final Map<String, Backup> backupMap = new ConcurrentHashMap<>();
 
     public CreatedBackupResponse createGmailBackup() {
-        final GmailBackup gmailBackup = new GmailBackup(createBackupTask());
-        final String backupId = gmailBackup.getBackupId().toString();
-        backupMap.put(backupId, gmailBackup);
-        return new CreatedBackupResponse(gmailBackup.getBackupId());
+        final Backup backup = new Backup(createBackupTask());
+        final String backupId = backup.getBackupId().toString();
+        backupMap.put(backupId, backup);
+        return new CreatedBackupResponse(backup.getBackupId());
     }
 
     public List<InitiatedBackupResponse> getInitiatedGmailBackupList() {
@@ -74,42 +74,42 @@ public class GmailBackupService {
     }
 
     public List<String> getGmailMessagesBy(String backupId) {
-        GmailBackup gmailBackup = backupMap.get(backupId);
-        if (gmailBackup == null) {
+        Backup backup = backupMap.get(backupId);
+        if (backup == null) {
             throw new BackupNotFoundException("Backup was not found");
         }
 
-        setOkStatusFor(backupId, gmailBackup);
+        setOkStatusFor(backupId, backup);
 
-        return gmailBackup.getBackupTask().join()
+        return backup.getBackupTask().join()
                 .stream()
                 .map(GenericJson::toString)
                 .collect(Collectors.toList());
     }
 
-    private void setOkStatusFor(String backupId, GmailBackup gmailBackup) {
-        final CompletableFuture<List<Message>> backupTask = gmailBackup.getBackupTask();
+    private void setOkStatusFor(String backupId, Backup backup) {
+        final CompletableFuture<List<Message>> backupTask = backup.getBackupTask();
         backupTask.thenRun(() -> {
-            if (gmailBackup.getBackupStatus() != BackupStatus.OK) {
-                gmailBackup.setBackupStatus(BackupStatus.OK);
-                backupMap.put(backupId, gmailBackup);
+            if (backup.getBackupStatus() != BackupStatus.OK) {
+                backup.setBackupStatus(BackupStatus.OK);
+                backupMap.put(backupId, backup);
             }
         }).exceptionally(ex -> {
             logger.error("Backup " + backupId + " has failed.");
-            gmailBackup.setBackupStatus(BackupStatus.FAILED);
+            backup.setBackupStatus(BackupStatus.FAILED);
             return null;
         });
     }
 
     public List<String> getGmailMessagesBy(String backupId, String label) {
-        GmailBackup gmailBackup = backupMap.get(backupId);
-        if (gmailBackup == null) {
+        Backup backup = backupMap.get(backupId);
+        if (backup == null) {
             throw new BackupNotFoundException("Backup was not found");
         }
 
-        setOkStatusFor(backupId, gmailBackup);
+        setOkStatusFor(backupId, backup);
 
-        return gmailBackup.getBackupTask().join()
+        return backup.getBackupTask().join()
                 .stream()
                 .filter(m -> m.getLabelIds().contains(label))
                 .map(GenericJson::toString)
