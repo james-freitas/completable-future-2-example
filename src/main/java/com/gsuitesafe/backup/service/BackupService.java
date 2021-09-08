@@ -29,14 +29,14 @@ public class BackupService {
 
     private final Map<String, Backup> backupMap = new ConcurrentHashMap<>();
 
-    public CreatedBackupResponse createGmailBackup() {
+    public CreatedBackupResponse createBackup() {
         final Backup backup = new Backup(createBackupTask());
         final String backupId = backup.getBackupId().toString();
         backupMap.put(backupId, backup);
         return new CreatedBackupResponse(backup.getBackupId());
     }
 
-    public List<InitiatedBackupResponse> getInitiatedGmailBackupList() {
+    public List<InitiatedBackupResponse> getInitiatedBackupList() {
         return this.backupMap
                 .values()
                 .stream()
@@ -53,15 +53,15 @@ public class BackupService {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 TimeUnit.SECONDS.sleep(3);
-                logger.info("Getting google messages");
+                logger.info("Getting messages");
             } catch (InterruptedException e) {
                 throw new IllegalStateException(e);
             }
-            return generateMockedGmailMessagesList();
+            return generateMockedMessagesList();
         });
     }
 
-    private List<Message> generateMockedGmailMessagesList() {
+    private List<Message> generateMockedMessagesList() {
         Message message1 = new Message();
         message1.setId(UUID.randomUUID().toString());
         message1.setLabelIds(Collections.singletonList("labelA"));
@@ -73,7 +73,7 @@ public class BackupService {
         return Arrays.asList(message1, message2);
     }
 
-    public List<String> getGmailMessagesBy(String backupId) {
+    public List<String> getMessagesBy(String backupId) {
         Backup backup = backupMap.get(backupId);
         if (backup == null) {
             throw new BackupNotFoundException("Backup was not found");
@@ -101,7 +101,7 @@ public class BackupService {
         });
     }
 
-    public List<String> getGmailMessagesBy(String backupId, String label) {
+    public List<String> getMessagesBy(String backupId, String label) {
         Backup backup = backupMap.get(backupId);
         if (backup == null) {
             throw new BackupNotFoundException("Backup was not found");

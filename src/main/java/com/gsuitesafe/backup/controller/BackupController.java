@@ -35,13 +35,13 @@ public class BackupController {
 
     @PostMapping("/backups")
     public ResponseEntity<CreatedBackupResponse> createBackup() {
-        final CreatedBackupResponse backupResponse = service.createGmailBackup();
+        final CreatedBackupResponse backupResponse = service.createBackup();
         return new ResponseEntity<>(backupResponse, HttpStatus.OK);
     }
 
     @GetMapping("/backups")
     public ResponseEntity<List<InitiatedBackupResponse>> listInitiatedBackups() {
-        List<InitiatedBackupResponse> list = service.getInitiatedGmailBackupList();
+        List<InitiatedBackupResponse> list = service.getInitiatedBackupList();
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
@@ -53,7 +53,7 @@ public class BackupController {
 
         prepareHeadersFor(backupId, response);
 
-        final List<String> messages = service.getGmailMessagesBy(backupId);
+        final List<String> messages = service.getMessagesBy(backupId);
 
         Path path = Paths.get(backupId + ".txt");
         Files.write(path, messages, StandardCharsets.UTF_8);
@@ -76,7 +76,7 @@ public class BackupController {
 
         prepareHeadersFor(backupId, label, response);
 
-        final List<String> messages = service.getGmailMessagesBy(backupId, label);
+        final List<String> messages = service.getMessagesBy(backupId, label);
 
         Path path = Paths.get(backupId + "-" + label + ".txt");
         Files.write(path, messages, StandardCharsets.UTF_8);

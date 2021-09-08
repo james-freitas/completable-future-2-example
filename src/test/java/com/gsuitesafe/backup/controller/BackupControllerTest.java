@@ -48,7 +48,7 @@ public class BackupControllerTest {
 
         final CreatedBackupResponse createdBackupResponse = new CreatedBackupResponse(UUID.randomUUID());
 
-        given(service.createGmailBackup()).willReturn(createdBackupResponse);
+        given(service.createBackup()).willReturn(createdBackupResponse);
 
         mockMvc.perform(post("/backups")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -56,7 +56,7 @@ public class BackupControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.backupId").isNotEmpty());
 
-        verify(service, times(1)).createGmailBackup();
+        verify(service, times(1)).createBackup();
     }
 
     @Test
@@ -67,7 +67,7 @@ public class BackupControllerTest {
                 UUID.randomUUID(), LocalDate.now(), BackupStatus.IN_PROGRESS);
         List<InitiatedBackupResponse> list = Arrays.asList(response);
 
-        given(service.getInitiatedGmailBackupList()).willReturn(list);
+        given(service.getInitiatedBackupList()).willReturn(list);
 
         mockMvc.perform(get("/backups"))
                 .andDo(print())
@@ -76,7 +76,7 @@ public class BackupControllerTest {
                 .andExpect(jsonPath("$[0].date").isNotEmpty())
                 .andExpect(jsonPath("$[0].status").isNotEmpty());
 
-        verify(service, times(1)).getInitiatedGmailBackupList();
+        verify(service, times(1)).getInitiatedBackupList();
     }
 
     @Test
@@ -95,13 +95,13 @@ public class BackupControllerTest {
     @DisplayName("Should fail to return a content of a specific backup when backup id is not found")
     void shouldFailToRecoverZipFileBackupByNonExistentId() throws Exception {
 
-        given(service.getGmailMessagesBy("backupId")).willThrow(BackupNotFoundException.class);
+        given(service.getMessagesBy("backupId")).willThrow(BackupNotFoundException.class);
 
         mockMvc.perform(get("/exports/backupId"))
                 .andExpect(status().isNotFound())
                 .andDo(print()).andReturn();
 
-        verify(service, times(1)).getGmailMessagesBy("backupId");
+        verify(service, times(1)).getMessagesBy("backupId");
     }
 
     @Test
