@@ -1,0 +1,87 @@
+{
+	"info": {
+		"_postman_id": "d07c403e-4d2c-4cb9-a1cd-52395adaad9f",
+		"name": "Backup",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create backup",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/backups",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"backups"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get initiated backups",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/backups",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"backups"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Export by backup id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/exports/05f377fd-f82a-48e1-8a4e-a5b647cf573c",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"exports",
+						"05f377fd-f82a-48e1-8a4e-a5b647cf573c"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Export by backup id and label",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/exports/05f377fd-f82a-48e1-8a4e-a5b647cf573c",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"exports",
+						"05f377fd-f82a-48e1-8a4e-a5b647cf573c"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
